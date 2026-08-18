@@ -124,7 +124,6 @@
     <div class="level-desc" style="text-align:center">Ты молодец, Эсманур! Вот твой код:</div>
     <div class="final-code">7359</div>
     <div class="level-desc" style="text-align:center">Введи его в сейф — приз твой! 🎁<br><br>С любовью ❤️</div>
-    <button class="btn-main" onclick="location.reload()">Пройти заново 🔁</button>
   </div>
 
   <div class="progress">
@@ -181,15 +180,30 @@ function submitPhoto(){
   if(cap.toLowerCase().charAt(0) !== "п"){
     msg.className="msg err"; msg.textContent="❌ «"+cap+"» начинается не на «П». Попробуй другой предмет!"; return;
   }
-  const reader = new FileReader();
+    const reader = new FileReader();
   reader.onload = e=>{
-    state.photos = state.photos||[];
-    state.photos.push({img:e.target.result, cap:cap}); save();
-    document.getElementById("caption-1").value="";
-    document.getElementById("file-1").value="";
-    msg.className="msg ok"; msg.textContent="✅ Засчитано! «"+cap+"» — на букву П!";
-    renderPhotos();
-    if(state.photos.length >= 3) setTimeout(()=>awardDigit(0,"screen-2"), 800);
+    const img = new Image();
+    img.onload = ()=>{
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if(w > MAX || h > MAX){
+        const k = Math.min(MAX/w, MAX/h);
+        w = Math.round(w*k); h = Math.round(h*k);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      const small = canvas.toDataURL("image/jpeg", 0.7);
+      state.photos = state.photos||[];
+      state.photos.push({img:small, cap:cap});
+      try { save(); } catch(err){}
+      document.getElementById("caption-1").value="";
+      document.getElementById("file-1").value="";
+      msg.className="msg ok"; msg.textContent="✅ Засчитано! «"+cap+"» — на букву П!";
+      renderPhotos();
+      if(state.photos.length >= 3) setTimeout(()=>awardDigit(0,"screen-2"), 800);
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
