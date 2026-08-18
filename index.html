@@ -136,8 +136,8 @@
 
 <script>
 const CODE = ["7","3","5","9"];
-let state = JSON.parse(localStorage.getItem("esmanur_quest") || "{}");
-function save(){ localStorage.setItem("esmanur_quest", JSON.stringify(state)); }
+let state = JSON.parse(localStorage.getItem("esmanur_quest_v2") || "{}");
+function save(){ localStorage.setItem("esmanur_quest_v2", JSON.stringify(state)); }
 function show(id){
   ["screen-start","screen-1","screen-2","screen-3","screen-4","screen-final"]
     .forEach(s => document.getElementById(s).classList.add("hidden"));
